@@ -5,7 +5,7 @@
 
 ## 目录结构
 
-假设工程目录为：
+工程文件目录为：
 ```
 xxxxx/xxx/Dance-Movements-Analyzer/
 ├── mediapipe/
@@ -16,6 +16,8 @@ xxxxx/xxx/Dance-Movements-Analyzer/
 │ ├── outputs/ # 输出文件夹（视频和关键点 npy）
 │ ├── test_data_saved.py # 主脚本
 │ ├── test.py # (临时文件，可忽略)
+│ ├── points_traj_viewer.py # 指定关节运动轨迹绘制工具
+│ ├── points_video_cmp.py # 单帧检查工具
 │ └── view_data.py # keypoints.npy预览工具
 └── README.md
 ```
@@ -54,7 +56,8 @@ model_path = '/xxxxxx/Dance-Movements-Analyzer/mediapipe/models/pose_landmarker_
 请根据实际路径修改这三个变量。
 
 ## 运行方法
-
+### 从原始视频中进行数据提取
+每一个全新的视频需要经过以下流程的处理，获取原始动作数据：
 ```
 python mediapipe/test_data_saved.py <视频相对路径>
 ```
@@ -126,7 +129,8 @@ python mediapipe/test_data_saved.py sq2/1.mp4
     "LEFT_FOOT_INDEX",
     "RIGHT_FOOT_INDEX"
     ]
-**npy数据预览方法**
+- **本项目多用归一化坐标** 
+### npy数据预览方法
 
 打开mediapipe/view_data.py,修改路径为实际.npy文件路径
 ```
@@ -140,6 +144,24 @@ python mediapipe/view_data.py
 ```
 start_id = 0 #预览的起始帧
 view_num = 20 #打印帧数
+```
+### 单个关节轨迹可视化
+```
+python mediapipe/points_traj_viewer.py {path to .npy file}/xxxx.npy <关节名称> normalized
+```
+例如绘制sq2/4.mp4中nose的轨迹：
+```
+python mediapipe/points_traj_viewer.py mediapipe/outputs/sq2/4_keypoints.npy NOSE normalized
+```
+在mediapipe/points_traj_viewer.py文件的最后，可以通过修改注释选择绘制X-Y二维投影轨迹plot_joint_trajectory_2d，或者绘制X-Y-Z三维空间轨迹plot_joint_trajectory_2d
+
+### 单帧抽取-检查工具
+```
+python mediapipe/points_video_cmp.py {path to .npy file}/xxxx.npy <原始视频.mp4> <第x帧> <第x个舞者> normalized"
+```
+例如检查sq2/4.mp4中第200帧的图像和关节状态
+```
+python mediapipe/points_video_cmp.py  mediapipe/outputs/sq2/4_keypoints.npy mediapipe/datasets/sq2/4.mp4 200 0 normalized
 ```
 
 ## 数据示例和输出demo

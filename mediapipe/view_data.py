@@ -13,10 +13,10 @@ POSE_LANDMARKS = [
     "LEFT_FOOT_INDEX", "RIGHT_FOOT_INDEX"
 ]
 
-start_id =0
+start_id =200
 view_num=20
 # 载入 npy 文件
-data = np.load("/home/wuyou/hxh/Dance-Movements-Analyzer/mediapipe/outputs/sq2/1_keypoints.npy", allow_pickle=True).item()
+data = np.load("/home/wuyou/hxh/Dance-Movements-Analyzer/mediapipe/outputs/sq2/4_keypoints.npy", allow_pickle=True).item()
 
 for i in range(0, view_num):
     k = start_id + i
