@@ -1,2 +1,3 @@
 *.mp4
 *.task
+mediapipe/view_structure.py

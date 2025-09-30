@@ -14,7 +14,7 @@ POSE_LANDMARKS = [
 ]
 
 start_id =200
-view_num=20
+view_num=1
 # 载入 npy 文件
 data = np.load("/home/wuyou/hxh/Dance-Movements-Analyzer/mediapipe/outputs/sq2/4_keypoints.npy", allow_pickle=True).item()
 
@@ -28,7 +28,6 @@ for i in range(0, view_num):
             print(f"\n舞者 {idx+1}:")
             normalized = pose["normalized"]
             world = pose["world"]
-
             for j, name in enumerate(POSE_LANDMARKS):
                 n_x, n_y, n_z = normalized[j]
                 w_x, w_y, w_z = world[j]

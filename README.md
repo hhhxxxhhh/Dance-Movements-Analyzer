@@ -96,7 +96,8 @@ python mediapipe/test_data_saved.py sq2/1.mp4
   - 关键点顺序：
     ```
     POSE_LANDMARKS = [
-    "NOSE","LEFT_EYE_INNER",
+    "NOSE",
+    "LEFT_EYE_INNER",
     "LEFT_EYE",
     "LEFT_EYE_OUTER",
     "RIGHT_EYE_INNER",
@@ -163,6 +164,52 @@ python mediapipe/points_video_cmp.py {path to .npy file}/xxxx.npy <原始视频.
 ```
 python mediapipe/points_video_cmp.py  mediapipe/outputs/sq2/4_keypoints.npy mediapipe/datasets/sq2/4.mp4 200 0 normalized
 ```
+
+### 视频数据对齐
+1. 确定直立蹦跳帧阈值
+   
+   main中运行函数
+   ```
+   makesure_threshold(folder_path=folder_path)
+   ```
+   folder_path配置为一个sequence下的outputs，包含每个视角的.npy数据。
+   
+   此时会输出每个视角经过平滑处理的鼻子轨迹，观察直立跳的结束帧数和最高点纵坐标，按下面要求配置范围阈值
+
+   ```
+   frame_range = 70     # 小于每个视角正式动作开始的帧数
+   maxima_bottom = -0.3 # 小于直立跳最高点纵坐标，大于其他被标记的局部最大值
+   ```
+2. 对齐并合并.npy数据
+   
+   ！！！两个函数中读取.npy的文件名格式需要重新调整，与你的.npy格式适配
+   
+   main中运行函数
+   ```
+   align_and_merge_npy( folder_path=folder_path, frame_range=frame_range, maxima_threshold=maxima_bottom, output_path=output_path )
+   ```
+   outputpath为合并npy路径，eg.xxx/xxxx/merged_keypoints.npy
+   merged_keypoints.npy字典结构:
+   ```
+   # frame_id 为int
+    {
+        frame_id:{
+            '4_keypoints.npy':
+            [
+                {
+                    'normalized': array,
+                    'world': array
+                }
+            ],
+            '1_keypoints.npy':[...],
+            '2_keypoints.npy':[...],
+            '3_keypoints.npy':[...]
+        },
+        frame_id:{...},
+        frame_id:{...}
+    }
+    ```
+
 
 ## 数据示例和输出demo
 详见网盘链接链接: 
