@@ -12,7 +12,7 @@ POSE_LANDMARKS = [
     "RIGHT_HEEL","LEFT_FOOT_INDEX","RIGHT_FOOT_INDEX"
 ]
 
-def plot_joint_trajectory_3d(npy_path, joint_name="RIGHT_WRIST", coord_type="world"):
+def plot_joint_trajectory_3d(npy_path, joint_name="RIGHT_WRIST", coord_type="normalized"):
     """
     绘制指定关节的三维运动轨迹
     :param npy_path: npy 文件路径
@@ -50,7 +50,7 @@ def plot_joint_trajectory_3d(npy_path, joint_name="RIGHT_WRIST", coord_type="wor
     ax.legend()
     plt.show()
 
-def plot_joint_trajectory_2d(npy_path, joint_name="RIGHT_WRIST", coord_type="world"):
+def plot_joint_trajectory_2d(npy_path, joint_name="RIGHT_WRIST", coord_type="normalized"):
     """
     绘制指定关节的二维运动轨迹
     :param npy_path: npy 文件路径

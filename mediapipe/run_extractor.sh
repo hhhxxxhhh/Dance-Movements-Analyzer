@@ -1,0 +1,1 @@
+python mediapipe/body_recog_extract.py /home/wuyou/hxh/Dance-Movements-Analyzer/mediapipe/datasets/251029whole/folk_dance

@@ -16,7 +16,7 @@ POSE_LANDMARKS = [
 start_id =200
 view_num=1
 # 载入 npy 文件
-data = np.load("/home/wuyou/hxh/Dance-Movements-Analyzer/mediapipe/outputs/sq2/4_keypoints.npy", allow_pickle=True).item()
+data = np.load(r"D:\Desktop\projects\DanceAnalyze\datasets\251029whole_npy\technique\tech-zhanxiayao-perfect-2\merged_keypoints_ABC.npy", allow_pickle=True).item()
 
 for i in range(0, view_num):
     k = start_id + i

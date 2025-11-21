@@ -1,3 +1,4 @@
 *.mp4
 *.task
-mediapipe/view_structure.py
+mediapipe\\datasets\\251029whole_npy
+mediapipe\\datasets\\251029whole_npy_wo_jump
