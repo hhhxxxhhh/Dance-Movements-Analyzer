@@ -1,4 +1,10 @@
 *.mp4
 *.task
-mediapipe\\datasets\\251029whole_npy
-mediapipe\\datasets\\251029whole_npy_wo_jump
+*.rar
+*.zip
+*.pdf
+*.png
+*.MOV
+mediapipe/datasets/251029whole_npy
+mediapipe/datasets/251029whole_npy_final
+mediapipe/datasets/251029whole_npy_wo_jump

@@ -449,43 +449,11 @@ def delete_jumping_frame(
 #     delete_jumping_frame()
 
 # 常用可视化绘图函数
-# if __name__ == "__main__":
-#     # npy_path = "D:\\Desktop\\projects\\DanceAnalyze\\datasets\\251029whole_npy\\emotion\\emotion-angry-1\\A_keypoints.npy"
-#     root = r"D:\Desktop\projects\DanceAnalyze\datasets\251029whole_npy_wo_jump"
-#     folder_paths = []
-#     # 遍历 root 下所有子文件夹（仅一级）
-#     for sub1 in os.listdir(root):
-#         level1 = os.path.join(root, sub1)
-#         if not os.path.isdir(level1):
-#             continue
-
-#         for sub2 in os.listdir(level1):
-#             level2 = os.path.join(level1, sub2)
-#             if not os.path.isdir(level2):
-#                 continue
-
-#             # 二级文件夹路径
-#             folder_paths.append(level2)
-
-#     #for debug
-#     folder_paths = [r"D:\Desktop\projects\DanceAnalyze\datasets\251029whole_npy_final\emotion\emotion-angry-1"]
-
-#     for folder_path in folder_paths:
-#         output_path = os.path.join(folder_path, "merged_keypoints_ABC.npy")
-#         print(f"Processing folder: {folder_path}")
-#         # align_and_merge_npy(folder_path=folder_path, front_n=200, threshold=0.04, output_path=output_path)
-#         # makesure_threshold(folder_path=folder_path)
-#         visualize_merged_joint_y(merged_npy_path=output_path,joint_name='NOSE')
-#         # visualize_merged_joints_xy(merged_npy_path=output_path)
-
-#去尾
 if __name__ == "__main__":
-
-    root = r"D:\Desktop\projects\DanceAnalyze\datasets\251029whole_npy_wo_jump"
-    dst_root = r"D:\Desktop\projects\DanceAnalyze\datasets\251029whole_npy_final"
-
+    # npy_path = "D:\\Desktop\\projects\\DanceAnalyze\\datasets\\251029whole_npy\\emotion\\emotion-angry-1\\A_keypoints.npy"
+    root = r"D:\Desktop\projects\Dance-Movements-Analyzer\mediapipe\datasets\251029whole_npy_final"
     folder_paths = []
-    # 遍历 root 下所有子文件夹（仅二级）
+    # 遍历 root 下所有子文件夹（仅一级）
     for sub1 in os.listdir(root):
         level1 = os.path.join(root, sub1)
         if not os.path.isdir(level1):
@@ -496,42 +464,74 @@ if __name__ == "__main__":
             if not os.path.isdir(level2):
                 continue
 
+            # 二级文件夹路径
             folder_paths.append(level2)
 
-    #单独更新
-    # folder_paths=[r'D:\Desktop\projects\DanceAnalyze\datasets\251029whole_npy_wo_jump\emotion\emotion-angry-1']
+    #for debug
+    folder_paths = [r"D:\Desktop\projects\Dance-Movements-Analyzer\mediapipe\datasets\251029whole_npy_final\emotion\emotion-angry-1"]
 
     for folder_path in folder_paths:
-        src_path = os.path.join(folder_path, "merged_keypoints_ABC.npy")
-        if not os.path.exists(src_path):
-            print(f"{src_path} 不存在，跳过")
-            continue
+        output_path = os.path.join(folder_path, "merged_keypoints_ABC.npy")
+        print(f"Processing folder: {folder_path}")
+        # align_and_merge_npy(folder_path=folder_path, front_n=200, threshold=0.04, output_path=output_path)
+        # makesure_threshold(folder_path=folder_path)
+        # visualize_merged_joint_y(merged_npy_path=output_path,joint_name='NOSE')
+        visualize_merged_joints_xy(merged_npy_path=output_path)
 
-        print(f"\nProcessing folder: {folder_path}")
-        # 可视化
-        visualize_merged_joints_xy(merged_npy_path=src_path)
+#去尾
+# if __name__ == "__main__":
 
-        # 用户输入裁剪帧号
-        try:
-            trim_frame = int(input("请输入保留帧数，输入0表示不裁剪: \n"))
-        except ValueError:
-            print("输入无效，跳过裁剪")
-            trim_frame = 0
+#     root = r"D:\Desktop\projects\DanceAnalyze\datasets\251029whole_npy_wo_jump"
+#     dst_root = r"D:\Desktop\projects\DanceAnalyze\datasets\251029whole_npy_final"
 
-        if trim_frame > 0:
-            # 计算相对路径
-            rel_path = os.path.relpath(src_path, root)
-            dst_path = os.path.join(dst_root, rel_path)
-            os.makedirs(os.path.dirname(dst_path), exist_ok=True)
+#     folder_paths = []
+#     # 遍历 root 下所有子文件夹（仅二级）
+#     for sub1 in os.listdir(root):
+#         level1 = os.path.join(root, sub1)
+#         if not os.path.isdir(level1):
+#             continue
 
-            # 加载数据
-            data = np.load(src_path, allow_pickle=True).item()
+#         for sub2 in os.listdir(level1):
+#             level2 = os.path.join(level1, sub2)
+#             if not os.path.isdir(level2):
+#                 continue
 
-            # 保留 trim_frame 之前的帧
-            trimmed = {k: v for k, v in data.items() if k <= trim_frame}
+#             folder_paths.append(level2)
 
-            # 保存到新路径
-            np.save(dst_path, trimmed)
-            print(f"裁剪后数据已保存到 {dst_path}")
-        else:
-            print("未进行裁剪")
+#     #单独更新
+#     folder_paths=[r'D:\Desktop\projects\Dance-Movements-Analyzer\mediapipe\datasets\251029whole_npy_wo_jump\technique\tech-daotizijinguan-perfect-1']
+
+#     for folder_path in folder_paths:
+#         src_path = os.path.join(folder_path, "merged_keypoints_ABC.npy")
+#         if not os.path.exists(src_path):
+#             print(f"{src_path} 不存在，跳过")
+#             continue
+
+#         print(f"\nProcessing folder: {folder_path}")
+#         # 可视化
+#         visualize_merged_joints_xy(merged_npy_path=src_path)
+
+#         # 用户输入裁剪帧号
+#         try:
+#             trim_frame = int(input("请输入保留帧数，输入0表示不裁剪: \n"))
+#         except ValueError:
+#             print("输入无效，跳过裁剪")
+#             trim_frame = 0
+
+#         if trim_frame > 0:
+#             # 计算相对路径
+#             rel_path = os.path.relpath(src_path, root)
+#             dst_path = os.path.join(dst_root, rel_path)
+#             os.makedirs(os.path.dirname(dst_path), exist_ok=True)
+
+#             # 加载数据
+#             data = np.load(src_path, allow_pickle=True).item()
+
+#             # 保留 trim_frame 之前的帧
+#             trimmed = {k: v for k, v in data.items() if k <= trim_frame}
+
+#             # 保存到新路径
+#             np.save(dst_path, trimmed)
+#             print(f"裁剪后数据已保存到 {dst_path}")
+#         else:
+#             print("未进行裁剪")

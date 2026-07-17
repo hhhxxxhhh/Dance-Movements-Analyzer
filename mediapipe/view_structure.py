@@ -15,6 +15,6 @@ def print_dict_tree(d, indent=0):
         return
 
 if __name__ == "__main__":
-    path ="/home/wuyou/hxh/Dance-Movements-Analyzer/mediapipe/outputs/sq2/4_keypoints.npy"
+    path ="D:\\Desktop\\projects\\Dance-Movements-Analyzer\\mediapipe\\datasets\\251029whole_npy_final\\emotion\\emotion-angry-1\\merged_keypoints_ABC.npy"
     data = np.load(path, allow_pickle=True).item()  # 确保是字典格式
     print_dict_tree(data)

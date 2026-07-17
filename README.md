@@ -5,6 +5,7 @@
 
 ## 目录结构
 
+**文件结构有删改，部分目录变动，忽略下面文件结构，只需关注完成“掐头去尾、对齐”等预处理后的npy在mediapipe\datasets\251029whole_npy_final，动作描述文本文件在standard\动作打标(0709)**
 工程文件目录为：
 ```
 xxxxx/xxx/Dance-Movements-Analyzer/
@@ -39,7 +40,7 @@ pip install opencv-python mediapipe numpy tqdm
 
 - tqdm：显示处理进度
 
-## 路径配置说明
+## 路径配置说明（有变动，忽略）
 在 test_data_saved.py 中，有几个重要的路径变量：
 
 ```
@@ -56,7 +57,83 @@ model_path = '/xxxxxx/Dance-Movements-Analyzer/mediapipe/models/pose_landmarker_
 请根据实际路径修改这三个变量。
 
 ## 运行方法
-### 从原始视频中进行数据提取
+
+### 曲线绘图说明
+1. 关节夹角
+运行 physics_analyze_2D.py，函数process_view_2d_motion_from_file中进行预处理，返回值、查询键值和对应含义如下
+
+'''
+    # (T,J,2) 每个关节每个时刻的二维坐标
+    # (T-1,J,2)是每个关节每个时刻的速度向量
+    # (j1,j2)是BONE_PAIRS列表中的一种
+    return {
+        "frames": frames,            # list[int]
+        "kp_norm": kp_filled,        # (T,J,2) 原始 normalized（插值后）
+        "kp_m": kp_m,                # (T,J,2) 单位：米
+        "vel": vel,                  # (T-1,J,2) 速度 单位：m/s
+        "acc": acc,                  # (T-2,J,2) 加速度 单位：m/s^2
+        "speed": speed,              # (T-1,J) 标量速度 单位：m/s
+        "accel_mag": accel_mag,      # (T-2,J) 加速度大小 单位：m/s^2
+        "bone_vecs": bone_vecs,      # {(j1,j2): (T,2)} 骨骼向量 单位：米
+        "seg_vecs": seg_vecs,        # {name: (T,2)} 骨骼向量（易读名称查询） 单位：米
+        "angles": angles,            # {(j1,j2): (T,)} 单位：rad
+        "ang_vel": ang_vel           # {(j1,j2): (T-1,)} 关节夹角相对角速度 单位：rad/s
+    }
+'''
+
+读取键值并绘制随时间变化的曲线图方法如下
+
+'''
+    result = process_view_2d_motion_from_file(
+        merged_npy_path=data_file,
+        view="A_keypoints.npy"
+    )
+
+    # 易读骨段命名，查询骨段方向向量
+    left_thigh = result["seg_vecs"]["left_thigh"]     # (T,2)
+    left_shank = result["seg_vecs"]["left_shank"]     # (T,2)
+
+    # 读取BONE_PAIRS中一段骨骼的角速度
+    left_thigh_ang_vel = result["ang_vel"][("LEFT_HIP", "LEFT_KNEE")]
+
+    # 计算左膝关节两侧骨段夹角
+    left_knee_angle = compute_segment_angle(left_thigh, left_shank)  # (T,)
+    
+    # 时间轴
+    time_axis = np.arange(len(left_knee_angle))*DT  
+    time_axis_vel = np.arange(len(left_thigh_ang_vel))*DT
+
+    # 绘图示例
+    # 夹角与时间曲线
+    plot_motion_parameter_time_curve(
+        time_axis,
+        left_knee_angle,
+        title="Body-Thigh Angle Over Time",
+        ylabel="Angle (deg)"
+    )
+    # 关节角速度与时间曲线（time_axis_vel长度比time_axis短1）
+    plot_motion_parameter_time_curve(
+        time_axis_vel,
+        left_thigh_ang_vel,
+        title="Left Thigh Angular Velocity Over Time",
+        ylabel="Angular Velocity (rad/s)"
+    )
+'''
+
+2. 关节路径
+```
+python mediapipe/points_traj_viewer.py {path to .npy file}/xxxx.npy <关节名称> normalized
+```
+例如绘制sq2/4.mp4中nose的轨迹：
+```
+python mediapipe/points_traj_viewer.py mediapipe/outputs/sq2/4_keypoints.npy NOSE normalized
+```
+在mediapipe/points_traj_viewer.py文件的最后，可以通过修改注释选择绘制X-Y二维投影轨迹plot_joint_trajectory_2d，或者绘制X-Y-Z三维空间轨迹plot_joint_trajectory_2d
+
+3. 关节横向偏移（X）高度（Y）随时间变化曲线
+参考mediapipe\sq_data_aligner.py中451行开始没有被注释的“常用可视化”过程，主要函数visualize_merged_joints_xy
+
+### 从原始视频中进行数据提取【可忽略，此处npy数据已进行预处理，一般不再使用】
 每一个全新的视频需要经过以下流程的处理，获取原始动作数据：
 ```
 python mediapipe/test_data_saved.py <视频相对路径>
