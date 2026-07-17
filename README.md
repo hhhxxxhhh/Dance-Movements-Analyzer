@@ -59,31 +59,32 @@ model_path = '/xxxxxx/Dance-Movements-Analyzer/mediapipe/models/pose_landmarker_
 ## 运行方法
 
 ### 曲线绘图说明
-1. 关节夹角
+**1. 关节夹角**
+
 运行 physics_analyze_2D.py，函数process_view_2d_motion_from_file中进行预处理，返回值、查询键值和对应含义如下
 
-'''
-    # (T,J,2) 每个关节每个时刻的二维坐标
-    # (T-1,J,2)是每个关节每个时刻的速度向量
-    # (j1,j2)是BONE_PAIRS列表中的一种
-    return {
-        "frames": frames,            # list[int]
-        "kp_norm": kp_filled,        # (T,J,2) 原始 normalized（插值后）
-        "kp_m": kp_m,                # (T,J,2) 单位：米
-        "vel": vel,                  # (T-1,J,2) 速度 单位：m/s
-        "acc": acc,                  # (T-2,J,2) 加速度 单位：m/s^2
-        "speed": speed,              # (T-1,J) 标量速度 单位：m/s
-        "accel_mag": accel_mag,      # (T-2,J) 加速度大小 单位：m/s^2
-        "bone_vecs": bone_vecs,      # {(j1,j2): (T,2)} 骨骼向量 单位：米
-        "seg_vecs": seg_vecs,        # {name: (T,2)} 骨骼向量（易读名称查询） 单位：米
-        "angles": angles,            # {(j1,j2): (T,)} 单位：rad
-        "ang_vel": ang_vel           # {(j1,j2): (T-1,)} 关节夹角相对角速度 单位：rad/s
-    }
-'''
+```
+(T,J,2) 每个关节每个时刻的二维坐标
+(T-1,J,2)是每个关节每个时刻的速度向量
+(j1,j2)是BONE_PAIRS列表中的一种
+return {
+    "frames": frames,            # list[int]
+    "kp_norm": kp_filled,        # (T,J,2) 原始 normalized（插值后）
+    "kp_m": kp_m,                # (T,J,2) 单位：米
+    "vel": vel,                  # (T-1,J,2) 速度 单位：m/s
+    "acc": acc,                  # (T-2,J,2) 加速度 单位：m/s^2
+    "speed": speed,              # (T-1,J) 标量速度 单位：m/s
+    "accel_mag": accel_mag,      # (T-2,J) 加速度大小 单位：m/s^2
+    "bone_vecs": bone_vecs,      # {(j1,j2): (T,2)} 骨骼向量 单位：米
+    "seg_vecs": seg_vecs,        # {name: (T,2)} 骨骼向量（易读名称查询） 单位：米
+    "angles": angles,            # {(j1,j2): (T,)} 单位：rad
+    "ang_vel": ang_vel           # {(j1,j2): (T-1,)} 关节夹角相对角速度 单位：rad/s
+}
+```
 
 读取键值并绘制随时间变化的曲线图方法如下
 
-'''
+```
     result = process_view_2d_motion_from_file(
         merged_npy_path=data_file,
         view="A_keypoints.npy"
@@ -118,9 +119,9 @@ model_path = '/xxxxxx/Dance-Movements-Analyzer/mediapipe/models/pose_landmarker_
         title="Left Thigh Angular Velocity Over Time",
         ylabel="Angular Velocity (rad/s)"
     )
-'''
+```
 
-2. 关节路径
+**2. 关节路径**
 ```
 python mediapipe/points_traj_viewer.py {path to .npy file}/xxxx.npy <关节名称> normalized
 ```
@@ -130,7 +131,8 @@ python mediapipe/points_traj_viewer.py mediapipe/outputs/sq2/4_keypoints.npy NOS
 ```
 在mediapipe/points_traj_viewer.py文件的最后，可以通过修改注释选择绘制X-Y二维投影轨迹plot_joint_trajectory_2d，或者绘制X-Y-Z三维空间轨迹plot_joint_trajectory_2d
 
-3. 关节横向偏移（X）高度（Y）随时间变化曲线
+**3. 关节横向偏移（X）高度（Y）随时间变化曲线**
+
 参考mediapipe\sq_data_aligner.py中451行开始没有被注释的“常用可视化”过程，主要函数visualize_merged_joints_xy
 
 ### 从原始视频中进行数据提取【可忽略，此处npy数据已进行预处理，一般不再使用】
